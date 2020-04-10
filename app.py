@@ -1,5 +1,9 @@
 from flask import Flask, render_template
+from flask_pymongo import PyMongo
+
 app = Flask(__name__)
+app.config["MONGO_URI"] = "mongodb://localhost:2701/covid"
+mongo = PyMongo(app)
 
 @app.route("/")
 @app.route("/home")
@@ -12,7 +16,8 @@ def main():
 
 @app.route("/read")
 def read():
-    return render_template("read.html", messages="WIP TEXT")
+    messages = "Hello Test"
+    return render_template("read.html", messages=messages)
 
 @app.route("/write")
 def write():
