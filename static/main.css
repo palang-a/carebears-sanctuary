@@ -32,10 +32,21 @@ a{
 }
 
 @media (max-width: 360px) {
-
+    .btn-primary {
+        margin-top: 15px;
+        width: 50%;
+        color: white;
+        padding: 7px 15px;
+    }
 }
 
 @media (max-width: 415px) { 
+    .btn-primary {
+        margin-top: 15px;
+        width: 50%;
+        color: white;
+        padding: 7px 15px;
+    }
  }
 
  @media (max-width: 465px) { 
@@ -49,6 +60,6 @@ a{
 
  @media (max-width: 575px) { 
     body{
-        margin-top: 7px;
+        margin-top: 5px;
     }
  }
