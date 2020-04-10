@@ -19,11 +19,21 @@
         {% endif %}
     </head>
     <body>
-        <header class="site-header">
-        </header>
         <main role="main" class="container">
-                {% block content %}{% endblock %}
+            <a href="/main">Home</a>
+            {% block content %}{% endblock %}
         </main>
+        <script>
+            function onClick(){
+                location.href='/main';
+            }
+            function onClickWrite(){
+                location.href='/write';
+            }
+            function onClickRead(){
+                location.href='/read';
+            }
+        </script>
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->

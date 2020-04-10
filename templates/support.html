@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content%}
+
+    <div>
+        <h1>How do you want to express yourself?</h1>
+        </br>
+        <div class="main">
+            <button type="button" class="btn btn-primary" onclick="onClickRead()">Postcard</button>
+        </div>       
+        <div class="main">
+            <button type="button" class="btn btn-primary">Quick Sketch</button>
+        </div>
+        <div class="main">
+            <button type="button" class="btn btn-primary">Sound bite</button>
+        </div>      
+        <div class="main">
+            <button type="button" class="btn btn-primary">Mood Check</button>
+        </div>
+    </div>
+    <script>
+        function onClickWrite(){
+            location.href='/write';
+        }
+        function onClickRead(){
+            location.href='/read';
+        }
+    </script>
+
+{% endblock content %}

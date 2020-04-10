@@ -1,31 +1,24 @@
 {% extends "layout.html" %}
-{% block content%}
-    <style>
-    .main{
-        display: grid;
-        align-items: center;
-    }
-    </style>
+{% block content %}
     <div>
-        <img src="static\images\letter_wings.jpg" alt="envelop_logo" class="center" height="350" width="350"> 
-        <h1>Welcome to Sanctuary</h1>
+        <h1 class="mb-4">Welcome to Sanctuary</h1>
+        <img src="static\images\avatar-svgrepo-com.svg" alt="profile_avatar" class="center" height="350" width="350"> 
         </br>
         <div class="main">
-            <button type="button" class="btn btn-primary" onclick="onClickRead()">Support Someone</button>
+            <button type="button" class="btn btn-primary" onclick="onClickSupport()">Support Someone</button>
         </div> 
         <br/>       
         <div class="main">
-            <button type="button" class="btn btn-primary" onclick="onClickWrite()">Enter the Sanctuary</button>
+            <button type="button" class="btn btn-primary" onclick="onClickWrite()">Enter the Sanctum</button>
         </div>
     </div>
     <script>
         function onClickWrite(){
             location.href='/write';
         }
-        function onClickRead(){
-            location.href='/read';
+        function onClickSupport(){
+            location.href='/support';
         }
-
     </script>
 
 {% endblock content %}
