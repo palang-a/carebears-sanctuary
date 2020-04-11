@@ -3,17 +3,35 @@
     <style>
     
     </style>
-    <section class="jumbotron text-center" style="margin-bottom:0px!important;border-radius:0px!important;">
-        <div class="container">
-          <h1 class="jumbotron-heading">Share Your Feelings</h1>
+    <section>
+        <div>
+          <h1>Share Your Feelings</h1>
         </div>
     </section>
-    <form>
+    <form action="{{ url_for('add_postcard_event') }}" method="POST">
         <div class="form-group">
-            <textarea class="form-control" id="write" rows="5"></textarea>
+            <textarea class="form-control" name="feeling" rows="5"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Send</button>
+        <input type="submit" class="btn btn-primary" value="Send">
     </form>
+    <section class="mt-5">
+        <div>
+          <h4 style=text-align:left;>Thought Collection</h4>
+        </div>
+        {% for respone in other_response %}
+            <div class="jumbotron">
+                <div>
+                <p class="postcard" align=left>You previous feelings:</p>
+                    <p class="lead postcard" class="lead postcard">{{ respone['event_data'] }}</p>
+                    <p>&#10084; {{ respone['postcard_love'] }} &#9728; {{  respone['postcard_comfort'] }} &#9970; {{  respone['postcard_comfort'] }}</p>
+                </div>
+                <p class="postcard" align=right>Thought from kindred spirit:</p>
+                <div>
+                    <p class="lead postcard" align=right>{{ respone['postcard_reply'] }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
 
     </script>
 

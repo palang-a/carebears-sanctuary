@@ -7,17 +7,35 @@
         </div>
     </section>
     <br/>
-    <h4>Your messages</h4>
-    <div>
-        {{ messages }}
+    <div class="jumbotron">
+        <div>
+            <p class="lead postcard">{{ messages }}</p>
+        </div>
     </div>
+
     <br/>
 
-    <form>
+    <form action="{{ url_for('postcard_reply', event_id = event_id ) }}" method="POST">
         <div class="form-group">
-            <textarea class="form-control" id="write" rows="5"></textarea>
+            <h4 style=text-align:left;>Your message</h4>
+            <textarea class="form-control" id="write" name="postcard_reply" rows="5"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Send</button>
+        <div class="form-check">
+            <div>
+                <div>
+                    <input type="checkbox" class="form-check-input" name="postcard_love" value="love">
+                    <label class="form-check-label mr-5">&#10084;</label>
+                    <input type="checkbox" class="form-check-input" name="postcard_support" value="support">
+                    <label class="form-check-label mr-5">&#9728;</label>
+                    <input type="checkbox" class="form-check-input" name="postcard_comfort" value="comfort">
+                    <label class="form-check-label mr-5"> &#9970;</label>
+                </div>
+            </div>
+        {% if event_id == "" %}
+        <input type="submit" class="btn btn-primary" disabled value="Send">
+        {% else %}
+        <input type="submit" class="btn btn-primary" value="Send">
+        {% endif %}
     </form>
     <script>
 
