@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask_pymongo import PyMongo
 from random import seed, randint
+import datetime
 import uuid
 
 app = Flask(__name__)
@@ -19,8 +20,10 @@ def home():
 def setcookie():
     if (request.cookies.get('c_id')) is None:
         cookie = str(uuid.uuid1())
+        expire_date = datetime.datetime.now()
+        expire_date = expire_date + datetime.timedelta(days=90)
         resp = redirect(url_for('main'))
-        resp.set_cookie('c_id', cookie)
+        resp.set_cookie('c_id', cookie, expires=expire_date)
         return resp
     else:
         return redirect(url_for('main'))
