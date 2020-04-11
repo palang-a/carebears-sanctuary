@@ -8,11 +8,11 @@
           <h1>Share Your Feelings</h1>
         </div>
     </section>
-    <form action="{{ url_for('add_postcard_event') }}" method="POST">
+    <form id="form_feeling" method="POST">
         <div class="form-group">
-            <textarea class="form-control" name="feeling" rows="5"></textarea>
+            <textarea class="form-control" id="feeling" name="feeling" rows="5"></textarea>
         </div>
-        <input type="submit" class="btn btn-primary" value="Send">
+        <input type="submit" class="btn btn-primary" onclick="return onClickSubmit()" value="Send">
     </form>
     <section class="mt-5">
         <div>
@@ -32,7 +32,15 @@
             </div>
         {% endfor %}
     </section>
-
+    <script>
+        function onClickSubmit(){
+            if(document.getElementById("feeling").value == ''){
+                alert("Please write your feelings for now. (In the future, we can try to read your mind!)");
+                return false;
+            } else {
+                document.getElementById("form_feeling").action = "{{ url_for('add_postcard_event') }}"
+            }
+        }
     </script>
 
 {% endblock content %}
