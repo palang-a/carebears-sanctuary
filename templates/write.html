@@ -25,10 +25,13 @@
                     <p class="lead postcard" class="lead postcard">{{ respone['event_data'] }}</p>
                     <p>&#10084; {{ respone['postcard_love'] }} &#9728; {{  respone['postcard_comfort'] }} &#9970; {{  respone['postcard_comfort'] }}</p>
                 </div>
-                <p class="postcard" align=right>Thought from kindred spirit:</p>
+                {% for sub_respone in respone['postcard_reply'] %}
+                <p class="postcard" align=right>{{ sub_respone[0] }} replied:</p>
                 <div>
-                    <p class="lead postcard" align=right>{{ respone['postcard_reply'] }}</p>
+                    <p class="lead postcard" align=right>{{ sub_respone[1] }}</p>
                 </div>
+                <p class="lead postcard" align=right>----------</p>
+                {% endfor %}
             </div>
         {% endfor %}
     </section>

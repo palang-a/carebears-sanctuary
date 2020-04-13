@@ -109,7 +109,7 @@ def add_postcard_event():
     postcard_support = 0
     postcard_comfort = 0
 
-    postcard_reply = ""
+    postcard_reply = []
     
     event_id = str(uuid.uuid1()) # generate uuid on server side for event // request.json['name'] 
 
@@ -170,19 +170,23 @@ def postcard_reply(event_id):
 
         if postcard_reply:
             # future code for maintaining message threads and conversations
-
+            greet_title = ["A kindred spirit", "A kind passerby", "A polite person", "A secret admirer", "Your tribe", "Kindred soul", "Alter Ego", "A friend", "A digital companion", "A sanctum floater", "A bunny rabbit", "Yoda", "Mr. T", "Bond, James", "William Shakespeare", "A mate", "Clanmate", "A Spirit Animal", "Baby Yoda", "The piano-playing cat", "Spongebob squarepants", "Boss coach", "The person with an anonymous mask", "An ace charcuterie-board maker"]
+            random_int = randint(0, (len(greet_title)-1))
+            selected_title = greet_title[random_int]
             # add in future ai call out and interventions from medical professionals
+            postcard_reply_list = ev['postcard_reply']
+            postcard_reply_greet = [selected_title, str(postcard_reply)]
 
-            postcard_reply = str(postcard_reply)
+            postcard_reply_list.append(postcard_reply_greet)
         else:
             #maintain previous message if no new message has been included
-            postcard_reply = ev['postcard_reply']
+            postcard_reply_list = ev['postcard_reply']
 
     # update the postcard
 
         result = a_event.update_one(
             {"event_id" : event_id},
-            {"$set": {"postcard_reply" : postcard_reply, "postcard_comfort" : postcard_comfort, "postcard_support": postcard_support, "postcard_love": postcard_love}},
+            {"$set": {"postcard_reply" : postcard_reply_list, "postcard_comfort" : postcard_comfort, "postcard_support": postcard_support, "postcard_love": postcard_love}},
             upsert=False
         )
 
