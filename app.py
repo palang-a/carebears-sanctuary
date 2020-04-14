@@ -201,5 +201,5 @@ def postcard_reply(event_id):
     return redirect(url_for("submit"))
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
+    #app.run(debug=True)
+    app.run( host='10.152.0.28', port='5000')
