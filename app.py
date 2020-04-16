@@ -1,6 +1,8 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask_pymongo import PyMongo
 from random import seed, randint
+from random_word import RandomWords
+
 import datetime
 import uuid
 
@@ -200,6 +202,42 @@ def postcard_reply(event_id):
         print (jsonify({'result' : output}))
     return redirect(url_for("submit"))
 
+# generate a challenge code to link two clients together.
+# each client for pairing must submit each other's client id + challenge codes.
+# the server will then merge the uuids together
+@app.route('/challenge/<uuid>', methods=['GET'])
+def generate_challenge_codes(uuid):
+
+    #store challenge events in a seperate collection
+    a_event = mongo.db.challengeDB
+
+    #Use random words library to generate 3x random words, at max 5 characters in length each
+    r = RandomWords()
+
+    try:
+        clientKey = r.get_random_word(maxLength=6) + str(randint(0,2000))
+    except: #try once more due to bug with library
+        try:
+            clientKey = r.get_random_word(maxLength=6) + str(randint(0,2000))
+        except:
+            clientKey = None #set to None to allow error to be returned
+
+    try:
+        list_random_words = r.get_random_words(maxLength=5, limit=3)
+    
+    except: #try a second time to generate words - bug with library
+        try:
+            list_random_words =  r.get_random_words(maxLength=5, limit=3)
+        except:
+            list_random_words = None #set to None to allow error to be returned
+
+    if list_random_words and clientKey:
+        output = {'id_client' : uuid, 'challenge_id' : clientKey,'challenge_word' : list_random_words}
+        a_event.insert_one({'id_client' : uuid, 'challenge_id' : clientKey,'challenge_word' : list_random_words})
+    else:
+        output = "Failed to generate codes. Please report the error."
+    return jsonify({'result' : output})
+
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(host='10.152.0.28', port='5000')
+    app.run(debug=True,host='0.0.0.0', port='5000')
