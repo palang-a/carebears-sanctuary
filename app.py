@@ -144,7 +144,7 @@ def postcard_reply(event_id):
     #print (event_id)
     a_event = mongo.db.sanctDb
     ev = a_event.find_one({'event_id' : str(event_id)})
-    print(ev)
+    #print(ev)
 
     postcard_reply = request.form['postcard_reply']
 
@@ -211,33 +211,40 @@ def generate_challenge_codes(uuid):
     #store challenge events in a seperate collection
     a_event = mongo.db.challengeDB
 
-    #Use random words library to generate 3x random words, at max 5 characters in length each
-    r = RandomWords()
+    # if a set of challenge codes of this uuid exists, then skip this.
+    a_code = a_event.find_one({'id_client' : str(uuid)})
 
-    try:
-        clientKey = r.get_random_word(maxLength=6) + str(randint(0,2000))
-    except: #try once more due to bug with library
+    if a_code: # challenge code exists already, skip generating a new one and return the existing one in DB
+        output = {'id_client' : uuid, 'challenge_id' : a_code['challenge_id'],'challenge_word' : a_code['challenge_word']}
+
+    else:
+        #Use random words library to generate 3x random words, at max 5 characters in length each for challenge code
+        # plus one challenge word with a random integer as the clientKey (a more user friendly form of the uuid)
+        r = RandomWords()
         try:
             clientKey = r.get_random_word(maxLength=6) + str(randint(0,2000))
-        except:
-            clientKey = None #set to None to allow error to be returned
+        except: #try once more due to bug with library
+            try:
+                clientKey = r.get_random_word(maxLength=6) + str(randint(0,2000))
+            except:
+                clientKey = None #set to None to allow error to be returned
 
-    try:
-        list_random_words = r.get_random_words(maxLength=5, limit=3)
-    
-    except: #try a second time to generate words - bug with library
         try:
-            list_random_words =  r.get_random_words(maxLength=5, limit=3)
-        except:
-            list_random_words = None #set to None to allow error to be returned
+            list_random_words = r.get_random_words(maxLength=5, limit=3)
+        
+        except: #try a second time to generate words - bug with library
+            try:
+                list_random_words =  r.get_random_words(maxLength=5, limit=3)
+            except:
+                list_random_words = None #set to None to allow error to be returned
 
-    if list_random_words and clientKey:
-        output = {'id_client' : uuid, 'challenge_id' : clientKey,'challenge_word' : list_random_words}
-        a_event.insert_one({'id_client' : uuid, 'challenge_id' : clientKey,'challenge_word' : list_random_words})
-    else:
-        output = "Failed to generate codes. Please report the error."
+        if list_random_words and clientKey:
+            output = {'id_client' : uuid, 'challenge_id' : clientKey,'challenge_word' : list_random_words}
+            a_event.insert_one({'id_client' : uuid, 'challenge_id' : clientKey,'challenge_word' : list_random_words})
+        else:
+            output = "Failed to generate codes. Please report the error."
     return jsonify({'result' : output})
 
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(debug=True, host='10.152.0.28', port='5000')
+    app.run(debug=True, host='0.0.0.0', port='5000')
