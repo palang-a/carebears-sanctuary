@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div>
+        <h1 class="mb-4">{{ pair_message }}</h1>
+        </br>
+
+        <form action="{{ url_for('merge_accounts', uuid=cookies) }}" method="POST">
+            <div class="form-group">
+                <h4>Your Challenge ID</h4>
+                <input type="text" class="form-control" id="feeling" name="clientKey" rows="5"></input>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Merge Device">
+        </form>   
+
+        <div class="main">
+            <button type="button" class="btn btn-primary" onclick="onClickMain()">Back to Home</button>
+        </div> 
+    </div>
+    <script>
+        function onClickMain(){
+            location.href='/main';
+        }
+    </script>
+
+{% endblock content %}

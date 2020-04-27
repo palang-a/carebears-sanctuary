@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div>
+        <h1 class="mb-4">{{ merge_message }}</h1>
+        
+        </br>
+        <div class="main">
+            <button type="button" class="btn btn-primary" onclick="onClickMain()">Back to Home</button>
+        </div> 
+    </div>
+    <script>
+        function onClickMain(){
+            location.href='/main';
+        }
+    </script>
+
+{% endblock content %}

@@ -24,7 +24,7 @@ def setcookie():
         cookie = str(uuid.uuid1())
         expire_date = datetime.datetime.now()
         expire_date = expire_date + datetime.timedelta(days=90)
-        resp = redirect(url_for('main'))
+        resp = redirect(url_for('generate_challenge_codes', uuid=cookie))
         resp.set_cookie('c_id', cookie, expires=expire_date)
         return resp
     else:
@@ -38,6 +38,31 @@ def main():
 @app.route("/support")
 def support():
     return render_template('support.html')
+
+@app.route("/merge_account")
+def merge_account():
+    cookies = request.cookies.get('c_id')
+    a_event = mongo.db.challengeDb
+    a_code = a_event.find_one({'id_client' : cookies})
+    return render_template('merge_account.html', cookies=cookies, code=a_code)
+
+@app.route("/pair_account")
+def pair_account():
+    cookies = request.cookies.get('c_id')
+    a_event = mongo.db.challengeDb
+    a_code = a_event.find_one({'id_client' : cookies})
+    return render_template('pair_account.html', cookies=cookies, code=a_code)
+
+@app.route("/merge_response")
+def merge_response():
+    merge_message = request.args['merge_message']
+    return render_template('merge_account.html', merge_message=merge_message)
+
+@app.route("/pair_response")
+def pair_response():
+    cookies = request.cookies.get('c_id')
+    pair_message = request.args['pair_message']
+    return render_template('pair_response.html', cookies=cookies, pair_message=pair_message)
 
 @app.route("/read", methods=['GET'])
 def read():
@@ -104,7 +129,7 @@ def get_one_event(event_id):
 def add_postcard_event():
     eventDb = mongo.db.sanctDb
     event_id = str(uuid.uuid1()) # generate uuid on server side for event // request.json['name'] 
-    c_id = request.form['c_id'] #request.cookies.get('c_id')
+    c_id = request.cookies.get('c_id')
     event_data = request.form['feeling']
 
     postcard_love = 0
@@ -246,7 +271,8 @@ def generate_challenge_codes(uuid):
             a_event.insert_one({'id_client' : uuid, 'challenge_id' : clientKey,'challenge_word' : list_random_words, 'prev_verifications' : None, 'merged_account_id' : None})
         else:
             output = "Failed to generate codes. Please report the error."
-    return jsonify({'result' : output})
+    print(jsonify({'result' : output}))
+    return redirect(url_for('main'))
 
 # merge two accounts together, if the client submits correct responses to the challenge codes for the 
 # accounts they are trying to link
@@ -316,7 +342,8 @@ def response_challenge_codes(uuid):
     else:
         output = "Generate a challenge code first."
 
-    return jsonify({'result' : output})
+    print (jsonify({'result' : output}))
+    return redirect(url_for("pair_response", pair_message=output))
 
 @app.route('/account/merge/<uuid>', methods=['POST'])
 def merge_accounts(uuid):
@@ -378,7 +405,8 @@ def merge_accounts(uuid):
         else:
             output = "Failed to update postcards to merge accounts for ids: " + uuid + " and other client id: "+ other_uuid
 
-    return jsonify({'result' : output})
+    print (jsonify({'result' : output}))
+    return redirect(url_for("merge_response", merge_message=output))
 
 
 def do_merge (uuid_this_client, uuid_other_client, uuid_target):
